@@ -1,0 +1,96 @@
+<div class="container">
+  <h1>Update Post</h1>
+
+  <a href="#" routerLink="/users/index" class="btn btn-primary">Inicio</a>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-group">
+      <label for="user">Usuario:</label>
+
+      <input
+        formControlName="user"
+        id="user"
+        type="text"
+        class="form-control"
+      />
+
+      <div
+        *ngIf="f['user'].touched && f['user'].invalid"
+        class="alert alert-danger"
+      >
+        <div *ngIf="f['user'].errors && f['user'].errors['required']">
+          Usuario es requerido.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Contraseña</label>
+
+      <textarea
+        formControlName="password"
+        id="password"
+        type="text"
+        class="form-control"
+      >
+      </textarea>
+
+      <div
+        *ngIf="f['password'].touched && f['password'].invalid"
+        class="alert alert-danger"
+      >
+        <div *ngIf="f['password'].errors && f['password'].errors['required']">
+          Contraseña requerida.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Correo: </label>
+
+      <textarea
+        formControlName="email"
+        id="email"
+        type="text"
+        class="form-control"
+      >
+      </textarea>
+
+      <div
+        *ngIf="f['email'].touched && f['email'].invalid"
+        class="alert alert-danger"
+      >
+        <div *ngIf="f['email'].errors && f['email'].errors['required']">
+          Correo es requerido.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Descripción: </label>
+
+      <textarea
+        formControlName="description"
+        id="description"
+        type="text"
+        class="form-control"
+      >
+      </textarea>
+
+      <div
+        *ngIf="f['description'].touched && f['description'].invalid"
+        class="alert alert-danger"
+      >
+        <div
+          *ngIf="f['description'].errors && f['description'].errors['required']"
+        >
+          Descripción es requerida.
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit" [disabled]="!form.valid">
+      Actualizar
+    </button>
+  </form>
+</div>
