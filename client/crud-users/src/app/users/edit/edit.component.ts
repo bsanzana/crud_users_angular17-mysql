@@ -33,6 +33,8 @@ export class EditComponent {
 
   userId: number = 0;
 
+  roles: string[] = ['ROLE_USER', 'ROLE_ADMIN'];
+
   // Primero se verifica si el usuario es admin
   userAdmin: boolean = false;
 
@@ -61,7 +63,6 @@ export class EditComponent {
     console.log(this.id);
     if (this.userAdmin || this.id == this.userId) {
       this.userService.find(this.id).subscribe((data: User) => {
-        // this.userData = ;
         this.form.setValue(data);
       });
     }
@@ -74,7 +75,7 @@ export class EditComponent {
 
       password: new FormControl('', Validators.required),
 
-      role: new FormControl('', Validators.required),
+      role: new FormControl('ROLE_USER', Validators.required),
     });
   }
 
@@ -88,7 +89,7 @@ export class EditComponent {
     this.userService.update(this.id, this.form.value).subscribe((res: any) => {
       console.log('Usuario Actualizado!');
 
-      this.router.navigateByUrl('users/index');
+      this.router.navigate(['users/index']);
     });
   }
 }

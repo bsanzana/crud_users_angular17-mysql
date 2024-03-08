@@ -29,6 +29,8 @@ export class CreateComponent {
 
   userAdmin: boolean = false;
 
+  roles: string[] = ['ROLE_USER', 'ROLE_ADMIN'];
+
   constructor(
     public User: UserService,
 
@@ -43,7 +45,7 @@ export class CreateComponent {
 
       password: new FormControl('', Validators.required),
 
-      role: new FormControl('', Validators.required),
+      role: new FormControl('ROLE_USER', Validators.required),
     });
 
     this.User.currentUserAdmin.subscribe({

@@ -9,7 +9,7 @@
 <div class="container" *ngIf="userAdmin || id == userId">
   <h1>Actualizar Usuario</h1>
 
-  <a href="#" [routerLink]="['/users/index']" class="btn btn-primary">Inicio</a>
+  <a href="#" [routerLink]="['/users/index']" class="btn btn-primary">Atrás</a>
 
   <form [formGroup]="form" (ngSubmit)="submit()">
     <div class="form-group">
@@ -74,25 +74,18 @@
       </div>
     </div>
 
-    <div class="form-group">
-      <label for="description">Role: </label>
-
-      <textarea
-        formControlName="role"
-        id="description"
-        type="text"
-        class="form-control"
-      >
-      </textarea>
+    <div class="form-group" *ngIf="userAdmin">
+      <label for="body">Rol</label>
+      <select formControlName="role" id="role" type="text" class="form-control">
+        <option *ngFor="let rol of roles" [value]="rol">{{ rol }}</option>
+      </select>
 
       <div
         *ngIf="f['role'].touched && f['role'].invalid"
         class="alert alert-danger"
       >
-        <div
-          *ngIf="f['description'].errors && f['description'].errors['required']"
-        >
-          Descripción es requerida.
+        <div *ngIf="f['role'].errors && f['role'].errors['required']">
+          Rol es requerido.
         </div>
       </div>
     </div>

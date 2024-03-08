@@ -131,7 +131,7 @@ app.put("/users/:id", (req, res) => {
 
   db.query(
     "UPDATE users SET user = ?, password = ?, role = ?, email = ? WHERE id = ?",
-    [user, password, email, role, userId],
+    [user, password, role, email, userId],
     (err) => {
       if (err) {
         res.status(500).send(err);
@@ -201,3 +201,27 @@ function createToken(user) {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
+// admin default
+
+adminDefault();
+function adminDefault() {
+  const { user, email, password, role } = {
+    user: "admin_default",
+    password: "admin",
+    email: "admin@admin",
+    role: "ROLE_ADMIN",
+  };
+
+  db.query(
+    "INSERT INTO users (user, email, password, role) VALUES (?, ?, ?, ?)",
+    [user, email, password, role],
+    (err, result) => {
+      if (err) {
+        console.error("Error al insertar el admin default:", err);
+        return;
+      }
+      console.log("admin deafult insertado!");
+    }
+  );
+}
