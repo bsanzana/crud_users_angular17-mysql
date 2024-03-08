@@ -3,8 +3,6 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../auth.service';
-import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +14,6 @@ import { BehaviorSubject } from 'rxjs';
 export class LoginComponent {
   form!: FormGroup;
   error!: string;
-  authService = inject(AuthService);
 
   constructor(public User: UserService, private router: Router) {
     this.form = new FormGroup({

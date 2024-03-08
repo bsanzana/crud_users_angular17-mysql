@@ -3,7 +3,6 @@ import { User } from '../user';
 import { UserService } from '../user.service';
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../auth.service';
 @Component({
   selector: 'app-index',
   standalone: true,
@@ -13,7 +12,6 @@ import { AuthService } from '../auth.service';
 })
 export class IndexComponent {
   users: User[] = [];
-  authService = inject(AuthService);
   userLoginOn: boolean = false;
   userAdmin: boolean = false;
   userId: number = 0;
