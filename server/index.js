@@ -8,6 +8,8 @@ const cors = require("cors");
 
 const app = express();
 
+const bcrypt = require("bcrypt");
+
 const jtw = require("jsonwebtoken");
 const port = 3000;
 
@@ -34,22 +36,6 @@ db.connect((err) => {
 });
 
 /* Middleware */
-const checkToken = (req, res, next) => {
-  if (!req.headers["authorization"]) {
-    return res.json({ error: "debes incluir token" });
-  }
-
-  const token = req.headers["authorization"];
-
-  let payload;
-  try {
-    payload = jtw.verify(token, "secret");
-  } catch (error) {
-    return res.json({ error: "token incorrecto" });
-  }
-
-  next();
-};
 app.use(bodyParser.json());
 
 app.use(cors());
@@ -186,16 +172,10 @@ app.get("/login/:email", (req, res) => {
       return;
     }
 
-    res.json({ user: result[0], token: createToken(result[0].user) });
+    res.json({ user: result[0] });
   });
 });
 
-function createToken(user) {
-  const payload = {
-    user: user,
-  };
-  return jtw.sign(payload, "secret");
-}
 /* Start server */
 
 app.listen(port, () => {
