@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { User } from '../user';
 import { UserService } from '../user.service';
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../auth.service';
 @Component({
   selector: 'app-index',
   standalone: true,
@@ -12,24 +13,49 @@ import { CommonModule } from '@angular/common';
 })
 export class IndexComponent {
   users: User[] = [];
-
+  authService = inject(AuthService);
+  userLoginOn: boolean = false;
+  userAdmin: boolean = false;
+  userId: number = 0;
   constructor(public userService: UserService, private router: Router) {}
 
   ngOnInit(): void {
-    console.log(this.router.url);
-
-    this.userService.getAll().subscribe((data: User[]) => {
-      this.users = data;
-
-      //console.log(this.users);
+    this.userService.currentUserLogInOn.subscribe({
+      next: (userLoginOn) => {
+        this.userLoginOn = userLoginOn;
+      },
     });
+
+    this.userService.currentUserAdmin.subscribe({
+      next: (userAdmin) => {
+        this.userAdmin = userAdmin;
+      },
+    });
+
+    this.userService.currentUserId.subscribe({
+      next: (userId) => {
+        this.userId = userId;
+      },
+    });
+
+    // Si es admin muestra todo
+    if (this.userAdmin == true) {
+      this.userService.getAll().subscribe((data: User[]) => {
+        this.users = data;
+      });
+    } else {
+      // De lo contrario solo trae la información del usuario por su id
+      this.userService.find(this.userId).subscribe((data: User) => {
+        this.users = [data];
+      });
+    }
   }
 
   deletePost(id: number) {
     this.userService.delete(id).subscribe((res) => {
       this.users = this.users.filter((item) => item.id !== id);
 
-      console.log('Usuario elimnado');
+      alert('Usuario Eliminado!');
     });
   }
 }

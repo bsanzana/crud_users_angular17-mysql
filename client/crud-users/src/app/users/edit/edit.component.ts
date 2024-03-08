@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { UserService } from '../user.service';
 
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { User } from '../user';
 
@@ -20,7 +20,7 @@ import {
 
   standalone: true,
 
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
 
   templateUrl: './edit.component.html',
 
@@ -31,6 +31,11 @@ export class EditComponent {
 
   form!: FormGroup;
 
+  userId: number = 0;
+
+  // Primero se verifica si el usuario es admin
+  userAdmin: boolean = false;
+
   constructor(
     public userService: UserService,
 
@@ -40,11 +45,26 @@ export class EditComponent {
   ) {}
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.params['userId'];
-    this.userService.find(this.id).subscribe((data: User) => {
-      // this.userData = ;
-      this.form.setValue(data);
+    this.userService.currentUserId.subscribe({
+      next: (userId) => {
+        this.userId = userId;
+      },
     });
+
+    this.userService.currentUserAdmin.subscribe({
+      next: (userAdmin) => {
+        this.userAdmin = userAdmin;
+      },
+    });
+
+    this.id = this.route.snapshot.params['userId'];
+    console.log(this.id);
+    if (this.userAdmin || this.id == this.userId) {
+      this.userService.find(this.id).subscribe((data: User) => {
+        // this.userData = ;
+        this.form.setValue(data);
+      });
+    }
 
     this.form = new FormGroup({
       id: new FormControl('', [Validators.required]),
@@ -54,7 +74,7 @@ export class EditComponent {
 
       password: new FormControl('', Validators.required),
 
-      description: new FormControl('', Validators.required),
+      role: new FormControl('', Validators.required),
     });
   }
 

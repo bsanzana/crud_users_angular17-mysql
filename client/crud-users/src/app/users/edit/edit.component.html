@@ -1,7 +1,15 @@
-<div class="container">
-  <h1>Update Post</h1>
+<div
+  class="container-fluid d-flex justify-content-center align-items-center"
+  style="height: 100vh"
+  *ngIf="!userAdmin && !(id == userId)"
+>
+  <p class="fs-1">Acceso denegado!</p>
+</div>
 
-  <a href="#" routerLink="/users/index" class="btn btn-primary">Inicio</a>
+<div class="container" *ngIf="userAdmin || id == userId">
+  <h1>Actualizar Usuario</h1>
+
+  <a href="#" [routerLink]="['/users/index']" class="btn btn-primary">Inicio</a>
 
   <form [formGroup]="form" (ngSubmit)="submit()">
     <div class="form-group">
@@ -67,10 +75,10 @@
     </div>
 
     <div class="form-group">
-      <label for="description">Descripción: </label>
+      <label for="description">Role: </label>
 
       <textarea
-        formControlName="description"
+        formControlName="role"
         id="description"
         type="text"
         class="form-control"
@@ -78,7 +86,7 @@
       </textarea>
 
       <div
-        *ngIf="f['description'].touched && f['description'].invalid"
+        *ngIf="f['role'].touched && f['role'].invalid"
         class="alert alert-danger"
       >
         <div

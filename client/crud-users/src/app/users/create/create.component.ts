@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { UserService } from '../user.service';
 
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import {
   ReactiveFormsModule,
@@ -18,7 +18,7 @@ import {
 
   standalone: true,
 
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
 
   templateUrl: './create.component.html',
 
@@ -26,6 +26,8 @@ import {
 })
 export class CreateComponent {
   form!: FormGroup;
+
+  userAdmin: boolean = false;
 
   constructor(
     public User: UserService,
@@ -41,7 +43,13 @@ export class CreateComponent {
 
       password: new FormControl('', Validators.required),
 
-      description: new FormControl('', Validators.required),
+      role: new FormControl('', Validators.required),
+    });
+
+    this.User.currentUserAdmin.subscribe({
+      next: (userAdmin) => {
+        this.userAdmin = userAdmin;
+      },
     });
   }
 

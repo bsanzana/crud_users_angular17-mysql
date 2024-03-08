@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 
-import { Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 
 import { User } from './user';
 
@@ -19,6 +23,17 @@ export class UserService {
       'Content-Type': 'application/json',
     }),
   };
+
+  currentUserLogInOn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+    false
+  );
+
+  // En estos 2 ultimos behavior deberian ser un objeto que guardara los datos del usuario, pero no lo logre.
+  currentUserAdmin: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+    false
+  );
+
+  currentUserId: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
   constructor(private httpClient: HttpClient) {}
 
@@ -40,7 +55,7 @@ export class UserService {
       .pipe(catchError(this.errorHandler));
   }
 
-  find(id: number): Observable<any> {
+  find(id: any): Observable<any> {
     return this.httpClient
       .get(this.apiURL + '/users/' + id)
 
@@ -59,10 +74,50 @@ export class UserService {
 
       .pipe(catchError(this.errorHandler));
   }
+
+  login(email: string): Observable<any> {
+    return (
+      this.httpClient
+        .get(this.apiURL + '/login/' + email)
+
+        //Si no hay error el estado pasa a log on true
+        .pipe(
+          tap(() => {
+            this.currentUserLogInOn.next(true);
+          }),
+          catchError(this.errorHandler)
+        )
+    );
+  }
+
+  get userLoginOn(): Observable<boolean> {
+    return this.currentUserLogInOn.asObservable();
+  }
+
+  get userAdmin(): Observable<boolean> {
+    return this.currentUserAdmin.asObservable();
+  }
+
+  get userId(): Observable<number> {
+    return this.currentUserId.asObservable();
+  }
+
+  logout(logout: boolean) {
+    this.currentUserLogInOn.next(logout);
+  }
+
+  typeAdmin(admin: boolean) {
+    this.currentUserAdmin.next(admin);
+  }
+
+  setUserId(id: number) {
+    this.currentUserId.next(id);
+  }
+
   errorHandler(error: any) {
     let errorMessage = '';
 
-    if (error.error instanceof ErrorEvent) {
+    if (error.error) {
       errorMessage = error.error.message;
     } else {
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;

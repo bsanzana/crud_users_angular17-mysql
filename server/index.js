@@ -8,6 +8,7 @@ const cors = require("cors");
 
 const app = express();
 
+const jtw = require("jsonwebtoken");
 const port = 3000;
 
 /* MySQL Connection */
@@ -33,7 +34,22 @@ db.connect((err) => {
 });
 
 /* Middleware */
+const checkToken = (req, res, next) => {
+  if (!req.headers["authorization"]) {
+    return res.json({ error: "debes incluir token" });
+  }
 
+  const token = req.headers["authorization"];
+
+  let payload;
+  try {
+    payload = jtw.verify(token, "secret");
+  } catch (error) {
+    return res.json({ error: "token incorrecto" });
+  }
+
+  next();
+};
 app.use(bodyParser.json());
 
 app.use(cors());
@@ -57,11 +73,11 @@ app.get("/users", (req, res) => {
 /* Create a new user */
 
 app.post("/users/create", (req, res) => {
-  const { user, email, password, description } = req.body;
+  const { user, email, password, role } = req.body;
 
   db.query(
-    "INSERT INTO users (user, email, password, description) VALUES (?, ?, ?, ?)",
-    [user, email, password, description],
+    "INSERT INTO users (user, email, password, role) VALUES (?, ?, ?, ?)",
+    [user, email, password, role],
     (err, result) => {
       if (err) {
         res.status(500).send(err);
@@ -111,11 +127,11 @@ app.get("/users/:id", (req, res) => {
 app.put("/users/:id", (req, res) => {
   const userId = req.params.id;
 
-  const { user, password, email, description } = req.body;
+  const { user, password, email, role } = req.body;
 
   db.query(
-    "UPDATE users SET user = ?, password = ?, description = ?, email = ? WHERE id = ?",
-    [user, password, email, description, userId],
+    "UPDATE users SET user = ?, password = ?, role = ?, email = ? WHERE id = ?",
+    [user, password, email, role, userId],
     (err) => {
       if (err) {
         res.status(500).send(err);
@@ -152,6 +168,34 @@ app.delete("/users/:id", (req, res) => {
   });
 });
 
+/* login */
+
+app.get("/login/:email", (req, res) => {
+  const email = req.params.email;
+
+  db.query("SELECT * FROM users WHERE email = ?", email, (err, result) => {
+    if (err) {
+      res.status(500).send(err);
+
+      return;
+    }
+
+    if (result.length === 0) {
+      res.status(404).send("No hubo respuesta");
+
+      return;
+    }
+
+    res.json({ user: result[0], token: createToken(result[0].user) });
+  });
+});
+
+function createToken(user) {
+  const payload = {
+    user: user,
+  };
+  return jtw.sign(payload, "secret");
+}
 /* Start server */
 
 app.listen(port, () => {
