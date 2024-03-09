@@ -34,7 +34,13 @@ Dejo el archivo `schema.sql` para que puedan importarlo y tener la estructura de
 
 La url raiz es `/login` donde se encontrará un formulario admin por default, correo: `admin@admin.cl`, password `admin`.
 
-# bugs
+# Observaciones.
 
-Falta mostrar un mensaje cuando no existe coincidencia con la base de datos. Solo hago match con el correo, falta hacer validación de
-las password, ya que si hubieran mismos correos solo entraria a un al primer usuario que haya el mismo correo. Como tambien haber puesto como primary key el correo.
+Se requiere mostrar un mensaje cuando no existe coincidencia con la base de datos. Actualmente, solo se realiza una coincidencia con el correo electrónico, pero no se realiza una validación de las contraseñas. Esto podría resultar en un acceso incorrecto si hay múltiples usuarios con el mismo correo electrónico, ya que solo se accedería al primer usuario que tenga dicho correo. Otro punto es que era mejor haber puesto como primary key el correo.
+
+Ya iniciando sesión se puede realizar el CRUD, solo los usuarios como `ROLE_ADMIN` tiene acceso al boton `Crear usuario`, como tambien ver y editar todos los otros usuarios. Cuando se inicia con un usuario `ROLE_USER` solo puede ver sus datos.
+
+# Observaciones.
+
+Dentro de los bugs detectados son que si uno se elimina el usuario no te bota de la pagina, cómo tambien si el admin se cambia el rol a usuario.
+Faltaria implentar una encriptación para las password, y una estrategia de tokens, porque al usar behavior subject no logre hacer que perdura las variables que guardan el login y autorización.
