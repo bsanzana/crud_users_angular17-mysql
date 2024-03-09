@@ -28,14 +28,13 @@ Configurar credenciales en /server/index.js. Parametros predeterminados
 }
 ```
 
-Deje una funcion que creara un admin default, asi pueden ingresar por primera vez a la app.
-
-```javascript
-{
-  correo: "admin@admin",
-
-  password: "admin",
-}
-```
-
 Dejo el archivo `schema.sql` para que puedan importarlo y tener la estructura de la base de datos.
+
+## Instrucciones
+
+La url raiz es `/login` donde se encontrará un formulario admin por default, correo: `admin@admin.cl`, password `admin`.
+
+# bugs
+
+Falta mostrar un mensaje cuando no existe coincidencia con la base de datos. Solo hago match con el correo, falta hacer validación de
+las password, ya que si hubieran mismos correos solo entraria a un al primer usuario que haya el mismo correo. Como tambien haber puesto como primary key el correo.

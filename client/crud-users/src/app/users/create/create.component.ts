@@ -41,7 +41,7 @@ export class CreateComponent {
     this.form = new FormGroup({
       user: new FormControl('', [Validators.required]),
 
-      email: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
 
       password: new FormControl('', Validators.required),
 
@@ -60,8 +60,6 @@ export class CreateComponent {
   }
 
   submit() {
-    console.log(this.form.value);
-
     this.User.create(this.form.value).subscribe((res: any) => {
       console.log('Usuario creado con exito!');
 

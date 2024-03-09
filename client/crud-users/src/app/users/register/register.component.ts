@@ -21,9 +21,9 @@ export class RegisterComponent {
 
   constructor(public User: UserService, private router: Router) {
     this.form = new FormGroup({
-      user: new FormControl(),
-      email: new FormControl(),
-      password: new FormControl(),
+      user: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', Validators.required),
     });
   }
 

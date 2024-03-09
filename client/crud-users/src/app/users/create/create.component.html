@@ -66,6 +66,7 @@
         *ngIf="f['email'].touched && f['email'].invalid"
         class="alert alert-danger"
       >
+        Correo es requerida.
         <div *ngIf="f['email'].errors && f['email'].errors['required']">
           Correo es requerida.
         </div>

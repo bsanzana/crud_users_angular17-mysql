@@ -181,27 +181,3 @@ app.get("/login/:email", (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
-
-// admin default
-
-adminDefault();
-function adminDefault() {
-  const { user, email, password, role } = {
-    user: "admin_default",
-    password: "admin",
-    email: "admin@admin",
-    role: "ROLE_ADMIN",
-  };
-
-  db.query(
-    "INSERT INTO users (user, email, password, role) VALUES (?, ?, ?, ?)",
-    [user, email, password, role],
-    (err, result) => {
-      if (err) {
-        console.error("Error al insertar el admin default:", err);
-        return;
-      }
-      console.log("admin deafult insertado!");
-    }
-  );
-}
